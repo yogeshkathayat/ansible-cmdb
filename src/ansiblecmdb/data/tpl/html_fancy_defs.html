@@ -349,6 +349,7 @@
         <% host_os(host, collapsed_class) %>
         <% host_network(host, collapsed_class) %>
         <% host_storage(host, collapsed_class) %>
+        <% services(host, collapsed_class) %>
       % endif
     </div>
   % endif
@@ -951,6 +952,32 @@
       <th>Mounts</th>
       <td>
         ${r_list(host['ansible_facts'].get('ansible_mounts', []))}
+      </td>
+    </tr>
+  </table>
+  </div>
+</%def>
+<%def name="services(host, collapsed_class)">
+  <h4 class="toggle-collapse ${collapsed_class}">Services</h4>
+  <div class="collapsable ${collapsed_class}">
+  <table>
+    <tr>
+      <th>Services</th>
+      <td>
+        <table class="net_overview">
+          <tr>
+            <th>service name</th>
+             <th>state</th>
+            <th>process Id</th>
+          </tr>
+          % for service in sorted(jsonxs(host, 'ansible_facts.ansible_services', default=[])):
+                <tr>
+                  <td>${service['display_name']}</td>
+                  <td>${service['state']}</td>
+                  <td>${service['pid']}</td>
+                </tr>
+          % endfor
+        </table>
       </td>
     </tr>
   </table>
